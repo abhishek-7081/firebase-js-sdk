@@ -35,7 +35,7 @@ try {
     '.config/configstore/firebase-tools.json'
   ));
   cachedToken = config.tokens.refresh_token;
-} catch (err) {}
+} catch (err) { }
 
 Promise.resolve(userToken || cachedToken)
   // Log in to firebase-tools
