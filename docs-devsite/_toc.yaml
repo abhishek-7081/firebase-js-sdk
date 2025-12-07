@@ -18,6 +18,8 @@ toc:
     path: /docs/reference/js/ai.arrayschema.md
   - title: AudioConversationController
     path: /docs/reference/js/ai.audioconversationcontroller.md
+  - title: AudioTranscriptionConfig
+    path: /docs/reference/js/ai.audiotranscriptionconfig.md
   - title: Backend
     path: /docs/reference/js/ai.backend.md
   - title: BaseParams
@@ -32,6 +34,12 @@ toc:
     path: /docs/reference/js/ai.citation.md
   - title: CitationMetadata
     path: /docs/reference/js/ai.citationmetadata.md
+  - title: CodeExecutionResult
+    path: /docs/reference/js/ai.codeexecutionresult.md
+  - title: CodeExecutionResultPart
+    path: /docs/reference/js/ai.codeexecutionresultpart.md
+  - title: CodeExecutionTool
+    path: /docs/reference/js/ai.codeexecutiontool.md
   - title: Content
     path: /docs/reference/js/ai.content.md
   - title: CountTokensRequest
@@ -46,6 +54,10 @@ toc:
     path: /docs/reference/js/ai.enhancedgeneratecontentresponse.md
   - title: ErrorDetails
     path: /docs/reference/js/ai.errordetails.md
+  - title: ExecutableCode
+    path: /docs/reference/js/ai.executablecode.md
+  - title: ExecutableCodePart
+    path: /docs/reference/js/ai.executablecodepart.md
   - title: FileData
     path: /docs/reference/js/ai.filedata.md
   - title: FileDataPart
@@ -186,12 +198,26 @@ toc:
     path: /docs/reference/js/ai.startchatparams.md
   - title: StringSchema
     path: /docs/reference/js/ai.stringschema.md
+  - title: TemplateGenerativeModel
+    path: /docs/reference/js/ai.templategenerativemodel.md
+  - title: TemplateImagenModel
+    path: /docs/reference/js/ai.templateimagenmodel.md
   - title: TextPart
     path: /docs/reference/js/ai.textpart.md
   - title: ThinkingConfig
     path: /docs/reference/js/ai.thinkingconfig.md
   - title: ToolConfig
     path: /docs/reference/js/ai.toolconfig.md
+  - title: Transcription
+    path: /docs/reference/js/ai.transcription.md
+  - title: URLContext
+    path: /docs/reference/js/ai.urlcontext.md
+  - title: URLContextMetadata
+    path: /docs/reference/js/ai.urlcontextmetadata.md
+  - title: URLContextTool
+    path: /docs/reference/js/ai.urlcontexttool.md
+  - title: URLMetadata
+    path: /docs/reference/js/ai.urlmetadata.md
   - title: UsageMetadata
     path: /docs/reference/js/ai.usagemetadata.md
   - title: VertexAIBackend
@@ -631,6 +657,10 @@ toc:
 - title: remote-config
   path: /docs/reference/js/remote-config.md
   section:
+  - title: ConfigUpdate
+    path: /docs/reference/js/remote-config.configupdate.md
+  - title: ConfigUpdateObserver
+    path: /docs/reference/js/remote-config.configupdateobserver.md
   - title: CustomSignals
     path: /docs/reference/js/remote-config.customsignals.md
   - title: FetchResponse

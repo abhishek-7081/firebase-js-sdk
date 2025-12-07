@@ -15,8 +15,19 @@
  * limitations under the License.
  */
 
-import { Content, GenerativeContentBlob, Part } from './content';
-import { LiveGenerationConfig, Tool, ToolConfig } from './requests';
+import {
+  Content,
+  FunctionResponse,
+  GenerativeContentBlob,
+  Part
+} from './content';
+import {
+  AudioTranscriptionConfig,
+  LiveGenerationConfig,
+  Tool,
+  ToolConfig
+} from './requests';
+import { Transcription } from './responses';
 
 /**
  * User input that is sent to the model.
@@ -28,6 +39,8 @@ export interface _LiveClientContent {
   clientContent: {
     turns: [Content];
     turnComplete: boolean;
+    inputTranscription?: Transcription;
+    outputTranscription?: Transcription;
   };
 }
 
@@ -39,9 +52,27 @@ export interface _LiveClientContent {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface _LiveClientRealtimeInput {
   realtimeInput: {
-    mediaChunks: GenerativeContentBlob[];
+    text?: string;
+    audio?: GenerativeContentBlob;
+    video?: GenerativeContentBlob;
+
+    /**
+     * @deprecated Use `text`, `audio`, and `video` instead.
+     */
+    mediaChunks?: GenerativeContentBlob[];
   };
 }
+
+/**
+ * Function responses that are sent to the model in real time.
+ */
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export interface _LiveClientToolResponse {
+  toolResponse: {
+    functionResponses: FunctionResponse[];
+  };
+}
+
 /**
  * The first message in a Live session, used to configure generation options.
  *
@@ -51,9 +82,22 @@ export interface _LiveClientRealtimeInput {
 export interface _LiveClientSetup {
   setup: {
     model: string;
-    generationConfig?: LiveGenerationConfig;
+    generationConfig?: _LiveGenerationConfig;
     tools?: Tool[];
     toolConfig?: ToolConfig;
     systemInstruction?: string | Part | Content;
+    inputAudioTranscription?: AudioTranscriptionConfig;
+    outputAudioTranscription?: AudioTranscriptionConfig;
   };
 }
+
+/**
+ * The Live Generation Config.
+ *
+ * The public API ({@link LiveGenerationConfig}) has `inputAudioTranscription` and `outputAudioTranscription`,
+ * but the server expects these fields to be in the top-level `setup` message. This was a conscious API decision.
+ */
+export type _LiveGenerationConfig = Omit<
+  LiveGenerationConfig,
+  'inputAudioTranscription' | 'outputAudioTranscription'
+>;

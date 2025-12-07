@@ -184,6 +184,24 @@ export interface LiveGenerationConfig {
    * The modalities of the response.
    */
   responseModalities?: ResponseModality[];
+  /**
+   * Enables transcription of audio input.
+   *
+   * When enabled, the model will respond with transcriptions of your audio input in the `inputTranscriptions` property
+   * in {@link LiveServerContent} messages. Note that the transcriptions are broken up across
+   * messages, so you may only receive small amounts of text per message. For example, if you ask the model
+   * "How are you today?", the model may transcribe that input across three messages, broken up as "How a", "re yo", "u today?".
+   */
+  inputAudioTranscription?: AudioTranscriptionConfig;
+  /**
+   * Enables transcription of audio input.
+   *
+   * When enabled, the model will respond with transcriptions of its audio output in the `outputTranscription` property
+   * in {@link LiveServerContent} messages. Note that the transcriptions are broken up across
+   * messages, so you may only receive small amounts of text per message. For example, if the model says
+   * "How are you today?", the model may transcribe that output across three messages, broken up as "How a", "re yo", "u today?".
+   */
+  outputAudioTranscription?: AudioTranscriptionConfig;
 }
 
 /**
@@ -239,7 +257,11 @@ export interface RequestOptions {
  * Defines a tool that model can call to access external knowledge.
  * @public
  */
-export type Tool = FunctionDeclarationsTool | GoogleSearchTool;
+export type Tool =
+  | FunctionDeclarationsTool
+  | GoogleSearchTool
+  | CodeExecutionTool
+  | URLContextTool;
 
 /**
  * Structured representation of a function declaration as defined by the
@@ -285,8 +307,6 @@ export interface GoogleSearchTool {
   /**
    * Specifies the Google Search configuration.
    * Currently, this is an empty object, but it's reserved for future configuration options.
-   * Specifies the Google Search configuration. Currently, this is an empty object, but it's
-   * reserved for future configuration options.
    *
    * When using this feature, you are required to comply with the "Grounding with Google Search"
    * usage requirements for your chosen API provider: {@link https://ai.google.dev/gemini-api/terms#grounding-with-google-search | Gemini Developer API}
@@ -297,6 +317,19 @@ export interface GoogleSearchTool {
 }
 
 /**
+ * A tool that enables the model to use code execution.
+ *
+ * @beta
+ */
+export interface CodeExecutionTool {
+  /**
+   * Specifies the Google Search configuration.
+   * Currently, this is an empty object, but it's reserved for future configuration options.
+   */
+  codeExecution: {};
+}
+
+/**
  * Specifies the Google Search configuration.
  *
  * @remarks Currently, this is an empty object, but it's reserved for future configuration options.
@@ -304,6 +337,27 @@ export interface GoogleSearchTool {
  * @public
  */
 export interface GoogleSearch {}
+
+/**
+ * A tool that allows you to provide additional context to the models in the form of public web
+ * URLs. By including URLs in your request, the Gemini model will access the content from those
+ * pages to inform and enhance its response.
+ *
+ * @beta
+ */
+export interface URLContextTool {
+  /**
+   * Specifies the URL Context configuration.
+   */
+  urlContext: URLContext;
+}
+
+/**
+ * Specifies the URL Context configuration.
+ *
+ * @beta
+ */
+export interface URLContext {}
 
 /**
  * A `FunctionDeclarationsTool` is a piece of code that enables the system to
@@ -342,10 +396,9 @@ export interface FunctionCallingConfig {
 }
 
 /**
- * <b>(EXPERIMENTAL)</b>
  * Encapsulates configuration for on-device inference.
  *
- * @public
+ * @beta
  */
 export interface OnDeviceParams {
   createOptions?: LanguageModelCreateOptions;
@@ -353,9 +406,8 @@ export interface OnDeviceParams {
 }
 
 /**
- * <b>(EXPERIMENTAL)</b>
  * Configures hybrid inference.
- * @public
+ * @beta
  */
 export interface HybridParams {
   /**
@@ -444,3 +496,8 @@ export interface SpeechConfig {
    */
   voiceConfig?: VoiceConfig;
 }
+
+/**
+ * The audio transcription configuration.
+ */
+export interface AudioTranscriptionConfig {}

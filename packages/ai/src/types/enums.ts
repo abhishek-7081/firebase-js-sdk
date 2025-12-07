@@ -345,7 +345,6 @@ export type ResponseModality =
   (typeof ResponseModality)[keyof typeof ResponseModality];
 
 /**
- * <b>(EXPERIMENTAL)</b>
  * Determines whether inference happens on-device or in-cloud.
  *
  * @remarks
@@ -364,7 +363,7 @@ export type ResponseModality =
  * cloud-hosted model. If not available, the SDK will fall back to an
  * on-device model.
  *
- * @public
+ * @beta
  */
 export const InferenceMode = {
   'PREFER_ON_DEVICE': 'prefer_on_device',
@@ -374,9 +373,62 @@ export const InferenceMode = {
 } as const;
 
 /**
- * <b>(EXPERIMENTAL)</b>
  * Determines whether inference happens on-device or in-cloud.
  *
- * @public
+ * @beta
  */
 export type InferenceMode = (typeof InferenceMode)[keyof typeof InferenceMode];
+
+/**
+ * Indicates whether inference happened on-device or in-cloud.
+ *
+ * @beta
+ */
+export const InferenceSource = {
+  'ON_DEVICE': 'on_device',
+  'IN_CLOUD': 'in_cloud'
+} as const;
+
+/**
+ * Indicates whether inference happened on-device or in-cloud.
+ *
+ * @beta
+ */
+export type InferenceSource =
+  (typeof InferenceSource)[keyof typeof InferenceSource];
+
+/**
+ * Represents the result of the code execution.
+ *
+ * @beta
+ */
+export const Outcome = {
+  UNSPECIFIED: 'OUTCOME_UNSPECIFIED',
+  OK: 'OUTCOME_OK',
+  FAILED: 'OUTCOME_FAILED',
+  DEADLINE_EXCEEDED: 'OUTCOME_DEADLINE_EXCEEDED'
+};
+
+/**
+ * Represents the result of the code execution.
+ *
+ * @beta
+ */
+export type Outcome = (typeof Outcome)[keyof typeof Outcome];
+
+/**
+ * The programming language of the code.
+ *
+ * @beta
+ */
+export const Language = {
+  UNSPECIFIED: 'LANGUAGE_UNSPECIFIED',
+  PYTHON: 'PYTHON'
+};
+
+/**
+ * The programming language of the code.
+ *
+ * @beta
+ */
+export type Language = (typeof Language)[keyof typeof Language];

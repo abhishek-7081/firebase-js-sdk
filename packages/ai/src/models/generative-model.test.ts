@@ -20,7 +20,8 @@ import {
   FunctionCallingMode,
   AI,
   InferenceMode,
-  AIErrorCode
+  AIErrorCode,
+  ChromeAdapter
 } from '../public-types';
 import * as request from '../requests/request';
 import { SinonStub, match, restore, stub } from 'sinon';
@@ -30,9 +31,9 @@ import {
 } from '../../test-utils/mock-response';
 import sinonChai from 'sinon-chai';
 import { VertexAIBackend } from '../backend';
-import { ChromeAdapterImpl } from '../methods/chrome-adapter';
 import { AIError } from '../errors';
 import chaiAsPromised from 'chai-as-promised';
+import { fakeChromeAdapter } from '../../test-utils/get-fake-firebase-services';
 
 use(sinonChai);
 use(chaiAsPromised);
@@ -51,12 +52,6 @@ const fakeAI: AI = {
   location: 'us-central1'
 };
 
-const fakeChromeAdapter = new ChromeAdapterImpl(
-  // @ts-expect-error
-  undefined,
-  InferenceMode.PREFER_ON_DEVICE
-);
-
 describe('GenerativeModel', () => {
   it('passes params through to generateContent', async () => {
     const genModel = new GenerativeModel(
@@ -71,7 +66,9 @@ describe('GenerativeModel', () => {
                 description: 'mydesc'
               }
             ]
-          }
+          },
+          { googleSearch: {} },
+          { codeExecution: {} }
         ],
         toolConfig: {
           functionCallingConfig: { mode: FunctionCallingMode.NONE }
@@ -81,7 +78,7 @@ describe('GenerativeModel', () => {
       {},
       fakeChromeAdapter
     );
-    expect(genModel.tools?.length).to.equal(1);
+    expect(genModel.tools?.length).to.equal(3);
     expect(genModel.toolConfig?.functionCallingConfig?.mode).to.equal(
       FunctionCallingMode.NONE
     );
@@ -95,18 +92,22 @@ describe('GenerativeModel', () => {
     );
     await genModel.generateContent('hello');
     expect(makeRequestStub).to.be.calledWith(
-      'publishers/google/models/my-model',
-      request.Task.GENERATE_CONTENT,
-      match.any,
-      false,
+      {
+        model: 'publishers/google/models/my-model',
+        task: request.Task.GENERATE_CONTENT,
+        apiSettings: match.any,
+        stream: false,
+        requestOptions: {}
+      },
       match((value: string) => {
         return (
           value.includes('myfunc') &&
+          value.includes('googleSearch') &&
+          value.includes('codeExecution') &&
           value.includes(FunctionCallingMode.NONE) &&
           value.includes('be friendly')
         );
-      }),
-      {}
+      })
     );
     restore();
   });
@@ -130,14 +131,16 @@ describe('GenerativeModel', () => {
     );
     await genModel.generateContent('hello');
     expect(makeRequestStub).to.be.calledWith(
-      'publishers/google/models/my-model',
-      request.Task.GENERATE_CONTENT,
-      match.any,
-      false,
+      {
+        model: 'publishers/google/models/my-model',
+        task: request.Task.GENERATE_CONTENT,
+        apiSettings: match.any,
+        stream: false,
+        requestOptions: {}
+      },
       match((value: string) => {
         return value.includes('be friendly');
-      }),
-      {}
+      })
     );
     restore();
   });
@@ -183,24 +186,30 @@ describe('GenerativeModel', () => {
           functionDeclarations: [
             { name: 'otherfunc', description: 'otherdesc' }
           ]
-        }
+        },
+        { googleSearch: {} },
+        { codeExecution: {} }
       ],
       toolConfig: { functionCallingConfig: { mode: FunctionCallingMode.AUTO } },
       systemInstruction: { role: 'system', parts: [{ text: 'be formal' }] }
     });
     expect(makeRequestStub).to.be.calledWith(
-      'publishers/google/models/my-model',
-      request.Task.GENERATE_CONTENT,
-      match.any,
-      false,
+      {
+        model: 'publishers/google/models/my-model',
+        task: request.Task.GENERATE_CONTENT,
+        apiSettings: match.any,
+        stream: false,
+        requestOptions: {}
+      },
       match((value: string) => {
         return (
           value.includes('otherfunc') &&
+          value.includes('googleSearch') &&
+          value.includes('codeExecution') &&
           value.includes(FunctionCallingMode.AUTO) &&
           value.includes('be formal')
         );
-      }),
-      {}
+      })
     );
     restore();
   });
@@ -249,7 +258,9 @@ describe('GenerativeModel', () => {
       {
         model: 'my-model',
         tools: [
-          { functionDeclarations: [{ name: 'myfunc', description: 'mydesc' }] }
+          { functionDeclarations: [{ name: 'myfunc', description: 'mydesc' }] },
+          { googleSearch: {} },
+          { codeExecution: {} }
         ],
         toolConfig: {
           functionCallingConfig: { mode: FunctionCallingMode.NONE }
@@ -262,7 +273,7 @@ describe('GenerativeModel', () => {
       {},
       fakeChromeAdapter
     );
-    expect(genModel.tools?.length).to.equal(1);
+    expect(genModel.tools?.length).to.equal(3);
     expect(genModel.toolConfig?.functionCallingConfig?.mode).to.equal(
       FunctionCallingMode.NONE
     );
@@ -276,19 +287,23 @@ describe('GenerativeModel', () => {
     );
     await genModel.startChat().sendMessage('hello');
     expect(makeRequestStub).to.be.calledWith(
-      'publishers/google/models/my-model',
-      request.Task.GENERATE_CONTENT,
-      match.any,
-      false,
+      {
+        model: 'publishers/google/models/my-model',
+        task: request.Task.GENERATE_CONTENT,
+        apiSettings: match.any,
+        stream: false,
+        requestOptions: {}
+      },
       match((value: string) => {
         return (
           value.includes('myfunc') &&
+          value.includes('googleSearch') &&
+          value.includes('codeExecution') &&
           value.includes(FunctionCallingMode.NONE) &&
           value.includes('be friendly') &&
           value.includes('topK')
         );
-      }),
-      {}
+      })
     );
     restore();
   });
@@ -312,14 +327,16 @@ describe('GenerativeModel', () => {
     );
     await genModel.startChat().sendMessage('hello');
     expect(makeRequestStub).to.be.calledWith(
-      'publishers/google/models/my-model',
-      request.Task.GENERATE_CONTENT,
-      match.any,
-      false,
+      {
+        model: 'publishers/google/models/my-model',
+        task: request.Task.GENERATE_CONTENT,
+        apiSettings: match.any,
+        stream: false,
+        requestOptions: {}
+      },
       match((value: string) => {
         return value.includes('be friendly');
-      }),
-      {}
+      })
     );
     restore();
   });
@@ -361,7 +378,9 @@ describe('GenerativeModel', () => {
             functionDeclarations: [
               { name: 'otherfunc', description: 'otherdesc' }
             ]
-          }
+          },
+          { googleSearch: {} },
+          { codeExecution: {} }
         ],
         toolConfig: {
           functionCallingConfig: { mode: FunctionCallingMode.AUTO }
@@ -373,20 +392,24 @@ describe('GenerativeModel', () => {
       })
       .sendMessage('hello');
     expect(makeRequestStub).to.be.calledWith(
-      'publishers/google/models/my-model',
-      request.Task.GENERATE_CONTENT,
-      match.any,
-      false,
+      {
+        model: 'publishers/google/models/my-model',
+        task: request.Task.GENERATE_CONTENT,
+        apiSettings: match.any,
+        stream: false,
+        requestOptions: {}
+      },
       match((value: string) => {
         return (
           value.includes('otherfunc') &&
+          value.includes('googleSearch') &&
+          value.includes('codeExecution') &&
           value.includes(FunctionCallingMode.AUTO) &&
           value.includes('be formal') &&
           value.includes('image/png') &&
           !value.includes('image/jpeg')
         );
-      }),
-      {}
+      })
     );
     restore();
   });
@@ -406,10 +429,13 @@ describe('GenerativeModel', () => {
     );
     await genModel.countTokens('hello');
     expect(makeRequestStub).to.be.calledWith(
-      'publishers/google/models/my-model',
-      request.Task.COUNT_TOKENS,
-      match.any,
-      false,
+      {
+        model: 'publishers/google/models/my-model',
+        task: request.Task.COUNT_TOKENS,
+        apiSettings: match.any,
+        stream: false,
+        requestOptions: undefined
+      },
       match((value: string) => {
         return value.includes('hello');
       })
@@ -420,7 +446,7 @@ describe('GenerativeModel', () => {
 
 describe('GenerativeModel dispatch logic', () => {
   let makeRequestStub: SinonStub;
-  let mockChromeAdapter: ChromeAdapterImpl;
+  let mockChromeAdapter: ChromeAdapter;
 
   function stubMakeRequest(stream?: boolean): void {
     if (stream) {
