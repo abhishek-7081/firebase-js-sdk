@@ -1,17 +1,23 @@
 {
   "compilerOptions": {
     "strict": true,
-    "lib": ["ESNext"],
+    "lib": [
+      "ESNext"
+    ],
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "target": "ES2020",
-    "typeRoots": ["../node_modules/@types"],
+    "typeRoots": [
+      "../node_modules/@types"
+    ],
     "allowJs": true,
     "downlevelIteration": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "exclude": ["**/*.js"]
+  "exclude": [
+    "**/*.js"
+  ]
 }

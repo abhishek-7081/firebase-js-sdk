@@ -1,9 +1,11 @@
 # Firebase JavaScript SDK
 
 <!-- BADGES -->
+
 ![Build Status](https://img.shields.io/github/actions/workflow/status/firebase/firebase-js-sdk/test-all.yml)
 [![Version](https://img.shields.io/npm/v/firebase.svg?label=version)](https://www.npmjs.com/package/firebase)
 [![Coverage Status](https://coveralls.io/repos/github/firebase/firebase-js-sdk/badge.svg?branch=main)](https://coveralls.io/github/firebase/firebase-js-sdk?branch=main)
+
 <!-- END BADGES -->
 
 The Firebase JavaScript SDK implements the client-side libraries used by
@@ -32,7 +34,7 @@ Please see [Environment Support](https://firebase.google.com/support/guides/envi
 #### Node.js
 
 Before you can start working on the Firebase JS SDK, you need to have Node.js
-installed on your machine. As of April 19th, 2024 the team has been testing with Node.js version 
+installed on your machine. As of April 19th, 2024 the team has been testing with Node.js version
 `20.12.2`, but the required version of Node.js may change as we update our dependencies.
 
 To download Node.js visit https://nodejs.org/en/download/.
@@ -48,6 +50,7 @@ To install `yarn` follow the instructions listed on their website:
 https://yarnpkg.com/en/docs/install
 
 This repo currently supports building with yarn `1.x`. For instance, after installing yarn, run
+
 ```bash
 $ yarn set version 1.22.11
 ```
@@ -123,22 +126,24 @@ will be overwritten below.
 
 #### Storage Setup
 
-Visit the "Storage" section of the console and create a storage bucket. In 
+Visit the "Storage" section of the console and create a storage bucket. In
 order to run the tests, you will need to update your bucket's CORS rules.
 
 1. Create a new file called `cors.json` with the contents:
+
 ```json
 [
-    {
-        "origin": ["http://localhost:8089"],
-        "method": ["GET"],
-        "maxAgeSeconds": 3600
-    }
+  {
+    "origin": ["http://localhost:8089"],
+    "method": ["GET"],
+    "maxAgeSeconds": 3600
+  }
 ]
 ```
+
 1. Install `gsutil` from https://cloud.google.com/storage/docs/gsutil_install
 1. You will need to login if this is your first time using `gsutil`. Run `gcloud auth login`
-and follow the instructions to login.
+   and follow the instructions to login.
 1. Run `gsutil cors set cors.json gs://<your-cloud-storage-bucket>`
 
 For more information, visit https://firebase.google.com/docs/storage/web/download-files#cors_configuration
@@ -156,7 +161,6 @@ The tests need to be configured to use the Firebase production project that you
 created in the "Test Setup" section above. To do this, run the `yarn test:setup`
 command, as follows:
 
-
 ```bash
 # Select the Firebase project via the text-based UI. This will run tools/config.js
 # and deploy from config/ to your Firebase project.
@@ -167,9 +171,11 @@ $ yarn test:setup --projectId=<test_firebase_project_id>
 ```
 
 If you see an error like
+
 ```
 HTTP Error: 404, Project '<test_firebase_project_id>' does not exist.
 ```
+
 then make sure that you have created the database as specified in the "Firestore
 Database Setup" section above.
 
@@ -177,7 +183,7 @@ Database Setup" section above.
 
 Each of the directories in the `integration` directory as well as the `packages`
 directory have their own test suites. You will need to build the SDK before
-running tests. Test suites can be run all together by running the following 
+running tests. Test suites can be run all together by running the following
 command at the root of the package:
 
 ```bash
